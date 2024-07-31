@@ -1,10 +1,11 @@
-import { IProduct } from "@/types";
+import { IProduct, IShoppingCartItem } from "@/types";
 import { createContext, useReducer, ReactNode, Reducer, Dispatch } from "react";
 
 type IState = {
   sizes: { value: string; selected: boolean }[];
   products: IProduct[];
   priceOrder: "asc" | "desc";
+  shoppingCart: IShoppingCartItem[];
 };
 
 const initialState: IState = {
@@ -40,16 +41,21 @@ const initialState: IState = {
   ],
   products: [],
   priceOrder: "asc",
+  shoppingCart: [],
 };
 
 const actionTypes = [
   "sizes:selected",
   "products:set",
   "priceOrder:set",
+  "shoppingCart:add",
+  "shoppingCart:delete",
+  "shoppingCart:quantity",
 ] as const;
 
 type IAction = {
   type: (typeof actionTypes)[number];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload?: any;
 };
 
@@ -78,6 +84,43 @@ const shoppingReducer: Reducer<IState, IAction> = (state, action) => {
       return {
         ...state,
         priceOrder: action.payload,
+      };
+    case "shoppingCart:add":
+      return {
+        ...state,
+        shoppingCart: state.shoppingCart.some(
+          (item) => item.key === action.payload.key
+        )
+          ? state.shoppingCart.map((item) => {
+              if (item.key === action.payload.key) {
+                return {
+                  ...item,
+                  quantity: item.quantity + 1,
+                };
+              }
+              return item;
+            })
+          : state.shoppingCart.concat(action.payload),
+      };
+    case "shoppingCart:delete":
+      return {
+        ...state,
+        shoppingCart: state.shoppingCart.filter(
+          (item) => item.key !== action.payload
+        ),
+      };
+    case "shoppingCart:quantity":
+      return {
+        ...state,
+        shoppingCart: state.shoppingCart.map((item) => {
+          if (item.key === action.payload.key) {
+            return {
+              ...item,
+              quantity: action.payload.quantity,
+            };
+          }
+          return item;
+        }),
       };
     default: {
       return state;

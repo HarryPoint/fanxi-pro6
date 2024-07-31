@@ -10,6 +10,7 @@ export type IProduct = {
   sku: number;
   style: string;
   title: string;
+  img: string;
 };
 
 //   {
@@ -30,3 +31,10 @@ export type IProduct = {
 //     "style": "White T-shirt",
 //     "title": "Cropped Stay Groovy off white"
 // },
+
+export type IShoppingCartItem = {
+  key: string;
+  productId: number;
+  quantity: number;
+  size: string;
+};

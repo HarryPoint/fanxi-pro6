@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { useShopping, useShoppingDispatch } from "./hooks";
 import { getProducts } from "@/api";
-import SizeSelector from "@/components/SizeSelector";
+import ProductsFilter from "@/components/ProductsFilter";
 import ProductsList from "./components/ProductsList";
 
 function App() {
@@ -21,7 +21,7 @@ function App() {
   }, [checkedSizes, dispatch]);
   return (
     <div>
-      <SizeSelector />
+      <ProductsFilter />
       <ProductsList />
     </div>
   );

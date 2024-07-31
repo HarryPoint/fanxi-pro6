@@ -27,16 +27,25 @@ const Product: React.FC<{ data: IProduct }> = ({ data }) => {
 };
 
 const ProductsList = () => {
-  const { products, sizes } = useShopping();
+  const { products, sizes, priceOrder } = useShopping();
   const showProducts = useMemo(() => {
     const selectedSizes = sizes.filter((item) => item.selected);
+    let filteredProducts = products;
     if (selectedSizes.length) {
-      return products.filter((pro) =>
+      filteredProducts = products.filter((pro) =>
         selectedSizes.some((size) => pro.availableSizes.includes(size.value))
       );
     }
-    return products;
-  }, [products, sizes]);
+    if (priceOrder) {
+      filteredProducts = filteredProducts.sort((a, b) => {
+        if (priceOrder === "asc") {
+          return a.price - b.price;
+        }
+        return b.price - a.price;
+      });
+    }
+    return filteredProducts;
+  }, [products, sizes, priceOrder]);
   return (
     <div className="container px-2 mx-auto">
       <div className="leading-6">{showProducts.length} Product(s) found</div>

@@ -4,6 +4,7 @@ import { createContext, useReducer, ReactNode, Reducer, Dispatch } from "react";
 type IState = {
   sizes: { value: string; selected: boolean }[];
   products: IProduct[];
+  priceOrder: "asc" | "desc";
 };
 
 const initialState: IState = {
@@ -38,9 +39,14 @@ const initialState: IState = {
     },
   ],
   products: [],
+  priceOrder: "asc",
 };
 
-const actionTypes = ["sizes:selected", "products:set"] as const;
+const actionTypes = [
+  "sizes:selected",
+  "products:set",
+  "priceOrder:set",
+] as const;
 
 type IAction = {
   type: (typeof actionTypes)[number];
@@ -67,6 +73,11 @@ const shoppingReducer: Reducer<IState, IAction> = (state, action) => {
       return {
         ...state,
         products: action.payload,
+      };
+    case "priceOrder:set":
+      return {
+        ...state,
+        priceOrder: action.payload,
       };
     default: {
       return state;
